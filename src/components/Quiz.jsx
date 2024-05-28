@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import questions from "../questions";
 import completeImg from "../assets/quiz-complete.png";
 import QuestionTimer from "./QuestionTimer";
+import Answers from "./Answers";
 
 export default function Quiz() {
   const [answerState, setAnswerState] = useState("");
@@ -47,10 +48,6 @@ export default function Quiz() {
     );
   }
 
-  const shuffledAnswer = [...questions[currQuestion].answers].sort(
-    () => Math.random() - 0.5
-  ); // randomize the order of the answers
-
   return (
     <section id="quiz">
       <div id="question">
@@ -61,32 +58,13 @@ export default function Quiz() {
         />
         <h2>{questions[currQuestion].text}</h2>
       </div>
-      <ul id="answers">
-        {shuffledAnswer.map((answer, index) => {
-          const isSelected = userAnswers[userAnswers.length - 1] === answer;
-          let style = "";
-
-          if (answerState === "answered" && isSelected) {
-            style = "selected";
-          } else if (
-            (answerState === "correct" || answerState === "wrong") &&
-            isSelected
-          ) {
-            style = answerState;
-          }
-
-          return (
-            <li className="answer" key={index}>
-              <button
-                onClick={() => handleSelectAnswer(answer)}
-                className={style}
-              >
-                {answer}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+      <Answers
+        key={currQuestion} // remount the component when currQuestion changes
+        answer={questions[currQuestion].answers}
+        selectedAnswer={userAnswers[userAnswers.length - 1]}
+        answersState={answerState}
+        onSelectAnswer={handleSelectAnswer}
+      />
     </section>
   );
 }
