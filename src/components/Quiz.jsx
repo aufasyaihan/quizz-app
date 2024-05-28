@@ -1,8 +1,7 @@
 import { useCallback, useState } from "react";
-import questions from "../questions";
+import QUESTIONS from "../questions.js";
 import completeImg from "../assets/quiz-complete.png";
-import QuestionTimer from "./QuestionTimer";
-import Answers from "./Answers";
+import Questions from "./Questions";
 
 export default function Quiz() {
   const [answerState, setAnswerState] = useState("");
@@ -10,7 +9,7 @@ export default function Quiz() {
 
   const currQuestion =
     answerState === "" ? userAnswers.length : userAnswers.length - 1;
-  const isFinished = currQuestion === questions.length;
+  const isFinished = currQuestion === QUESTIONS.length;
 
   const handleSelectAnswer = useCallback(
     function handleSelectAnswer(selectedAnswer) {
@@ -20,7 +19,7 @@ export default function Quiz() {
       });
 
       setTimeout(() => {
-        if (selectedAnswer === questions[currQuestion].answers[0]) {
+        if (selectedAnswer === QUESTIONS[currQuestion].answers[0]) {
           setAnswerState("correct");
         } else {
           setAnswerState("wrong");
@@ -50,20 +49,15 @@ export default function Quiz() {
 
   return (
     <section id="quiz">
-      <div id="question">
-        <QuestionTimer
-          key={currQuestion} // remount the component when currQuestion changes
-          time={15000}
-          onTimeout={handleSkipAnswer}
-        />
-        <h2>{questions[currQuestion].text}</h2>
-      </div>
-      <Answers
-        key={currQuestion} // remount the component when currQuestion changes
-        answer={questions[currQuestion].answers}
+      <Questions
+        key={currQuestion}
+        currQuestion={currQuestion}
+        questionText={QUESTIONS[currQuestion].text}
+        questionAnswer={QUESTIONS[currQuestion].answers}
         selectedAnswer={userAnswers[userAnswers.length - 1]}
-        answersState={answerState}
-        onSelectAnswer={handleSelectAnswer}
+        answerState={answerState}
+        onSkip={handleSkipAnswer}
+        onSelect={handleSelectAnswer}
       />
     </section>
   );
