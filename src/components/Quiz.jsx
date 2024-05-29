@@ -35,7 +35,7 @@ export default function Quiz() {
   return (
     <section id="quiz">
       <Questions
-        key={currQuestion}
+        key={currQuestion} // remount the component every changes in currQuestion
         index={currQuestion}
         onSkip={handleSkipAnswer}
         onSelect={handleSelectAnswer}
