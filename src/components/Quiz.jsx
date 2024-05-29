@@ -4,33 +4,18 @@ import completeImg from "../assets/quiz-complete.png";
 import Questions from "./Questions";
 
 export default function Quiz() {
-  const [answerState, setAnswerState] = useState("");
   const [userAnswers, setUserAnswers] = useState([]);
 
-  const currQuestion =
-    answerState === "" ? userAnswers.length : userAnswers.length - 1;
+  const currQuestion = userAnswers.length;
   const isFinished = currQuestion === QUESTIONS.length;
 
   const handleSelectAnswer = useCallback(
     function handleSelectAnswer(selectedAnswer) {
-      setAnswerState("answered");
       setUserAnswers((prevUserAnswers) => {
         return [...prevUserAnswers, selectedAnswer];
       });
-
-      setTimeout(() => {
-        if (selectedAnswer === QUESTIONS[currQuestion].answers[0]) {
-          setAnswerState("correct");
-        } else {
-          setAnswerState("wrong");
-        }
-
-        setTimeout(() => {
-          setAnswerState("");
-        }, 2000);
-      }, 1000);
     },
-    [currQuestion]
+    []
   );
 
   const handleSkipAnswer = useCallback(
@@ -51,11 +36,7 @@ export default function Quiz() {
     <section id="quiz">
       <Questions
         key={currQuestion}
-        currQuestion={currQuestion}
-        questionText={QUESTIONS[currQuestion].text}
-        questionAnswer={QUESTIONS[currQuestion].answers}
-        selectedAnswer={userAnswers[userAnswers.length - 1]}
-        answerState={answerState}
+        index={currQuestion}
         onSkip={handleSkipAnswer}
         onSelect={handleSelectAnswer}
       />
